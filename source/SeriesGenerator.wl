@@ -23,11 +23,23 @@ Begin["`Private`"];
 
 (* MAIN FUNCTIONS *)
 
-DEQPerturbativeSolution[DEQ_, t_, {h_, hSeries_, a_, order_}] := Block[{DEQPert, leadingOrder},
-	DEQPert = DEQ /. {h->hSeries[order]};
-	leadingOrder = LeadingOrder[DEQPert, t];
+DEQPerturbativeSolution[DEQ_, t_, {h_, hSeries_, a_, order_}] := Block[
+	{DEQPert, leadingOrder, aArr, n},
+	aArr = {};
+
+	(* leadingOrder = LeadingOrder[DEQPert, t]; *)
+	leadingOrder = -2;
+	n = 1;
+
+	DEQPert = DEQ /. {h->hSeries[n+1]};
 	LeadingOrderCoeff = Coefficient[DEQPert, t, leadingOrder];
-	aSol = a[1] /. Solve[LeadingOrderCoeff == 0, a[1]]
+	aSol = Solve[LeadingOrderCoeff == 0, a[n]];
+	AppendTo[aArr, aSol];
+
+	n = 2;
+	DEQPert = DEQ /. {h->hSeries[n+1]} /. aSol[[1]];
+	LeadingOrderCoeff = Coefficient[DEQPert, t, leadingOrder-2n+2];
+	aSol = a[n] /. Solve[LeadingOrderCoeff == 0, a[n]]
 
 ];
 

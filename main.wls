@@ -9,10 +9,5 @@ hSeries[5][t]
 
 Collect[DEQ /. h->hSeries[5], t]
 
+<<"source/SeriesGenerator.wl"
 DEQPerturbativeSolution[DEQ, t, {h, hSeries, a, 3}]
-
-Exponent[tmp, t]
-
-Exponent[tmp, 1/t]
-
-FindLowestPower[tmp, t]
