@@ -48,11 +48,22 @@ tritronquee[x_] := - 0.1875543083 - 0.3049055603 x + 0.1055298557 x^2 - 0.052293
 tritronqueePlot = Plot[tritronquee[x], {x,0,3.5}, PlotStyle->Gray];
 
 Export["plots/yPlot.png", Show[yPlot, tritronqueePlot]];
-Show[yPlot, tritronqueePlot]];
 
+(* Conformal Borel *)
+CBT = ConformalMap[BT, p, z];
+TCBT = Normal@Series[CBT, {z, 0,2 orderN - 1}]; (* taylor conformal borel *)
+PCBT = PadeApproximant[TCBT, {z, 0, {orderN-1, orderN}}];
+CPCBT = InverseConformalMap[PCBT, z, p];
 
-(* Singularities of Borel Transform *)
-dottedLine = Plot[1 / (2 Pi) Sqrt[3/5], {pp, 0.9, 1}, PlotStyle->{Dashed, Gray}];
-singPlotBT = Plot[Re[(Sqrt[p - I] BT) /. p -> I pp], {pp, 0.9, 1.02}];
-singPlotPBT = Plot[Re[(Sqrt[p - I] PBT) /. p -> I pp], {pp, 0.9, 1.01}, PlotStyle->Red];
-Export["plots/singPlot.png", Show[dottedLine, singPlotPBT, singPlotBT, PlotRange->{0,0.12}]];
+Print["We get for half the Stokes constant at p=i: ", Re[(Sqrt[p - I] CPCBT) /. p -> 0.99999 I // N]];
+Print["The correct value is: ", 1 / (2 Pi) Sqrt[3/5] // N];
+
+(* Singularities of Borel Transform Stokes Constant*)
+dottedLine = Plot[1 / (2 Pi) Sqrt[3/5], {pp, 0.9, 1}, PlotStyle->{Dashed, Gray},
+	PlotLabels->"analytic result"];
+singPlotBT = Plot[Re[(Sqrt[p - I] BT) /. p -> I pp], {pp, 0.9, 1.0}, PlotLabels->"Borel"];
+singPlotPBT = Plot[Re[(Sqrt[p - I] PBT) /. p -> I pp], {pp, 0.9, 1.0}, PlotStyle->Red,
+	PlotLabels->"Pade-Borel"];
+singPlotPCBT = Plot[Re[(Sqrt[p - I] CPCBT) /. p -> I pp], {pp, 0.9, 1.0}, PlotStyle->Black,
+	PlotLabels->"Pade-Conformal-Borel"];
+Export["plots/singPlot.png", Show[dottedLine, singPlotPBT, singPlotBT, singPlotPCBT, PlotRange->All]];

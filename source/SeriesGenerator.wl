@@ -22,6 +22,8 @@ RichardsonExtrapolate::usage = "RichardsonExtrapolate[series, orderN]: Extrapola
 BorelTransformCoeffs::usage = "BorelTransformCoeffs[seriesCoeffs]: Transforms the coefficients a_n to a_n / (2n-1)!";
 BorelTransform::usage = "BorelTransform[an, p]: Transforms the series a_n x^n to the Borel transformed a_n / (2n-1)! p^(2n-1)";
 InverseBorelTransform::usage = "asdf";
+ConformalMap::usage = "asdf";
+InverseConformalMap::usage = "asdf";
 
 Begin["`Private`"];
 
@@ -68,6 +70,14 @@ BorelTransform[seriesCoeffs_, p_] := Block[{borelCoeffs, i},
 
 InverseBorelTransform[borelTransform_, var_, newVar_] := Block[{},
 	NIntegrate[Exp[-var newVar] borelTransform, {var, 0, Infinity}]
+];
+
+ConformalMap[borelTransform_, var_, newVar_] := Block[{},
+	borelTransform /.var -> 2 newVar / ( 1 - newVar^2 )
+]
+
+InverseConformalMap[padeConformalBorelTranform_, var_, newVar_] := Block[{},
+	padeConformalBorelTranform /. var -> newVar / (1 + Sqrt[1 + newVar^2])
 ];
 
 
