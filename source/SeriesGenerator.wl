@@ -18,6 +18,7 @@ ClearAll["SeriesGenerator`*", "SeriesGenerator`Private`*"];
 (* Public Functions, Documentations *)
 Painleve1PertSol::usage = "Painleve1PertSol[DEQ, t, {h, hSeries, order}] returns the coefficients gotten from plugging in the hSeries for h in DEQ and solving order by order. The series is supposed to be for large t, so a series in 1/t";
 FindLowestPower::usage = "FindLowestPower[series, t] finds the lowest power of t in the series";
+RichardsonExtrapolate::usage = "RichardsonExtrapolate[series, orderN]: Extrapolate to the limit n->infty of the series a_n using Richardson's extrapolation on the last orderN elements.";
 
 Begin["`Private`"];
 
@@ -40,6 +41,12 @@ Painleve1PertSol[order_] := Block[
 
 	Values@aArr
 
+];
+
+RichardsonExtrapolate[series_, orderN_] := Block[{n},
+	If[orderN>Length@series, Print@"orderN is larger than the length of the series"];
+	n = Length@series;
+	Sum[ series[[n-orderN+k]] (n - orderN + k)^orderN (-1)^(k+orderN) / (k! (orderN - k)! ), {k, 0, orderN}]
 ];
 
 LeadingOrder[series_, t_] := Block[{},
