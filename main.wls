@@ -34,7 +34,7 @@ plot = Show[zeroesPlot, polesPlot, PlotLabel->"Fig. 1: Poles (red) and zeroes (b
 Export["plots/PadePolesAndZeroes.png", plot];
 
 (* Laplace Transform *)
-xList = Range[0,3.5,0.01];
+xList = Range[0,3.5,0.001];
 hList = Map[InverseBorelTransform[PBT, p, #]&, xList];
 yList = - Sqrt[xList / 6] ( 1 + hList ); (* eq. (4) *)
 
@@ -45,7 +45,7 @@ yPlot = ListPlot[Thread@{xList, yList},
 	Joined->True];
 
 tritronquee[x_] := - 0.1875543083 - 0.3049055603 x + 0.1055298557 x^2 - 0.05229396374 x^3;
-tritronqueePlot = Plot[tritronquee[x], {x,0,3.5}, PlotStyle->Gray];
+tritronqueePlot = Plot[tritronquee[x], {x,0,3.5}, PlotStyle->{Gray, Dashed}];
 
 Export["plots/yPlot.png", Show[yPlot, tritronqueePlot]];
 
@@ -67,3 +67,16 @@ singPlotPBT = Plot[Re[(Sqrt[p - I] PBT) /. p -> I pp], {pp, 0.9, 1.0}, PlotStyle
 singPlotPCBT = Plot[Re[(Sqrt[p - I] CPCBT) /. p -> I pp], {pp, 0.9, 1.0}, PlotStyle->Black,
 	PlotLabels->"Pade-Conformal-Borel"];
 Export["plots/singPlot.png", Show[dottedLine, singPlotPBT, singPlotBT, singPlotPCBT, PlotRange->All]];
+
+(* Laplace transform of Pade-Conformal-Borel *)
+hListC = Map[InverseBorelTransform[CPCBT, p, #]&, xList];
+yListC = - Sqrt[xList / 6] ( 1 + hListC ); (* eq. (4) *)
+
+
+yPlotC = ListPlot[Thread@{xList, yListC},
+	AxesLabel->{"x", "y(x)"},
+	Joined->True,
+	PlotStyle->Red,
+	PlotLabels->"Pade-Comformal-Borel"];
+
+Export["plots/yPlot2.png", Show[yPlot, tritronqueePlot, yPlotC, PlotRange->{{0,0.3}, {-0.4,0}}]];
