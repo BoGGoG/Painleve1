@@ -48,6 +48,11 @@ tritronquee[x_] := - 0.1875543083 - 0.3049055603 x + 0.1055298557 x^2 - 0.052293
 tritronqueePlot = Plot[tritronquee[x], {x,0,3.5}, PlotStyle->Gray];
 
 Export["plots/yPlot.png", Show[yPlot, tritronqueePlot]];
+Show[yPlot, tritronqueePlot]];
 
 
-(* Taylor Expansion *)
+(* Singularities of Borel Transform *)
+dottedLine = Plot[1 / (2 Pi) Sqrt[3/5], {pp, 0.9, 1}, PlotStyle->{Dashed, Gray}];
+singPlotBT = Plot[Re[(Sqrt[p - I] BT) /. p -> I pp], {pp, 0.9, 1.02}];
+singPlotPBT = Plot[Re[(Sqrt[p - I] PBT) /. p -> I pp], {pp, 0.9, 1.01}, PlotStyle->Red];
+Export["plots/singPlot.png", Show[dottedLine, singPlotPBT, singPlotBT, PlotRange->{0,0.12}]];
