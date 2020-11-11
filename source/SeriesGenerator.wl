@@ -19,6 +19,8 @@ ClearAll["SeriesGenerator`*", "SeriesGenerator`Private`*"];
 Painleve1PertSol::usage = "Painleve1PertSol[DEQ, t, {h, hSeries, order}] returns the coefficients gotten from plugging in the hSeries for h in DEQ and solving order by order. The series is supposed to be for large t, so a series in 1/t";
 FindLowestPower::usage = "FindLowestPower[series, t] finds the lowest power of t in the series";
 RichardsonExtrapolate::usage = "RichardsonExtrapolate[series, orderN]: Extrapolate to the limit n->infty of the series a_n using Richardson's extrapolation on the last orderN elements.";
+BorelTransformCoeffs::usage = "BorelTransformCoeffs[seriesCoeffs]: Transforms the coefficients a_n to a_n / (2n-1)!";
+BorelTransform::usage = "BorelTransform[an, p]: Transforms the series a_n x^n to the Borel transformed a_n / (2n-1)! p^(2n-1)";
 
 Begin["`Private`"];
 
@@ -52,6 +54,17 @@ RichardsonExtrapolate[series_, orderN_] := Block[{n},
 LeadingOrder[series_, t_] := Block[{},
 	Exponent[series, t]
 ];
+
+BorelTransformCoeffs[seriesCoeffs_] := Block[{},
+(* Map[seriesCoeffs[[#]] / ((2 # - 1)!)&, Range[1,Length@seriesCoeffs]] *)
+	Table[seriesCoeffs[[n]] / ((2 n - 1)!), {n,1,Length@seriesCoeffs}]
+];
+
+BorelTransform[seriesCoeffs_, p_] := Block[{borelCoeffs, i},
+	borelCoeffs = BorelTransformCoeffs[seriesCoeffs];
+	Sum[borelCoeffs[[i]] p^(2 i - 1), {i,1,Length@seriesCoeffs}]
+];
+
 
 (* END OF FUNCTIONS *)
 
