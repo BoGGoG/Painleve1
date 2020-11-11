@@ -21,6 +21,7 @@ FindLowestPower::usage = "FindLowestPower[series, t] finds the lowest power of t
 RichardsonExtrapolate::usage = "RichardsonExtrapolate[series, orderN]: Extrapolate to the limit n->infty of the series a_n using Richardson's extrapolation on the last orderN elements.";
 BorelTransformCoeffs::usage = "BorelTransformCoeffs[seriesCoeffs]: Transforms the coefficients a_n to a_n / (2n-1)!";
 BorelTransform::usage = "BorelTransform[an, p]: Transforms the series a_n x^n to the Borel transformed a_n / (2n-1)! p^(2n-1)";
+InverseBorelTransform::usage = "asdf";
 
 Begin["`Private`"];
 
@@ -63,6 +64,10 @@ BorelTransformCoeffs[seriesCoeffs_] := Block[{},
 BorelTransform[seriesCoeffs_, p_] := Block[{borelCoeffs, i},
 	borelCoeffs = BorelTransformCoeffs[seriesCoeffs];
 	Sum[borelCoeffs[[i]] p^(2 i - 1), {i,1,Length@seriesCoeffs}]
+];
+
+InverseBorelTransform[borelTransform_, var_, newVar_] := Block[{},
+	NIntegrate[Exp[-var newVar] borelTransform, {var, 0, Infinity}]
 ];
 
 

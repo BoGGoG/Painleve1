@@ -30,5 +30,14 @@ zeroes = p/.NSolve[Numerator@PBT == 0, p];
 
 polesPlot = ListPlot[Map[{Re[#], Im[#]}&, poles], PlotStyle->Red];
 zeroesPlot = ListPlot[Map[{Re[#], Im[#]}&, zeroes], PlotStyle->Blue]
-plot = Show[zeroesPlot, polesPlot, PlotLabel->"Poles (red) and zeroes (blue) of the Pade-Borel transform"];
+plot = Show[zeroesPlot, polesPlot, PlotLabel->"Fig. 1: Poles (red) and zeroes (blue) of the Pade-Borel transform"];
 Export["plots/PadePolesAndZeroes.png", plot];
+
+(* Laplace Transform *)
+xList = Range[0,3.5,0.01];
+hList = Map[InverseBorelTransform[PBT, p, #]&, xList];
+yList = - Sqrt[xList / 6] ( 1 + hList ); (* eq. (4) *)
+
+(* plot = ListPlot[Thread@{xList, hList}];*)
+yPlot = ListPlot[Thread@{xList, yList}, PlotLabel->"Fig. 2"];
+Export["plots/yPlot.png", yPlot];
