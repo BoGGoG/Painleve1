@@ -39,5 +39,15 @@ hList = Map[InverseBorelTransform[PBT, p, #]&, xList];
 yList = - Sqrt[xList / 6] ( 1 + hList ); (* eq. (4) *)
 
 (* plot = ListPlot[Thread@{xList, hList}];*)
-yPlot = ListPlot[Thread@{xList, yList}, PlotLabel->"Fig. 2"];
-Export["plots/yPlot.png", yPlot];
+yPlot = ListPlot[Thread@{xList, yList},
+	AxesLabel->{"x", "y(x)"},
+	PlotLabel->"Fig. 2",
+	Joined->True];
+
+tritronquee[x_] := - 0.1875543083 - 0.3049055603 x + 0.1055298557 x^2 - 0.05229396374 x^3;
+tritronqueePlot = Plot[tritronquee[x], {x,0,3.5}, PlotStyle->Gray];
+
+Export["plots/yPlot.png", Show[yPlot, tritronqueePlot]];
+
+
+(* Taylor Expansion *)
