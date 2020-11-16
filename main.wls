@@ -6,6 +6,8 @@ coeffs = Painleve1PertSol[orderN];
 	Have to guess the Gamma *)
 Atable = Table[ coeffs[[i]] / (-1)^(i+1) / Gamma[2 i - 1/2], {i,1,Length@coeffs}] // N;
 
+Length@coeffs
+
 anprefactor = RichardsonExtrapolate[Atable, 5]
 Print["The analytic result is ", 1/Pi Sqrt[ 6 / (5 Pi) ] // N]
 
@@ -56,6 +58,13 @@ PCBT = PadeApproximant[TCBT, {z, 0, {orderN-1, orderN}}];
 PCBT = Apart[(Numerator@PCBT // N) / FactorCompletely[Denominator@PCBT // N, z], z];
 CPCBT = InverseConformalMap[PCBT, z, p];
 
+(* stokes constants, figure 8 *)
+polesC = z/.NSolve[Denominator@Together@PCBT == 0, z];
+polesPlotC = ListPlot[Map[{Re[#], Im[#]}&, polesC], PlotStyle->Red,
+	AxesLabel->{"Re[z]", "Im[z]"},
+	PlotLabel->"Fig 8:\n Poles of conformally mapped Borel transform"];
+Export["plots/conformalPoles.png", polesPlotC];
+
 Print["We get for half the Stokes constant at p=i: ", Re[(Sqrt[p - I] CPCBT) /. p -> 0.99999 I // N]];
 Print["The correct value is: ", 1 / (2 Pi) Sqrt[3/5] // N];
 
@@ -68,6 +77,13 @@ singPlotPBT = Plot[Re[(Sqrt[p - I] PBT) /. p -> I pp], {pp, 0.9, 1.0}, PlotStyle
 singPlotPCBT = Plot[Re[(Sqrt[p - I] CPCBT) /. p -> I pp], {pp, 0.9, 1.0}, PlotStyle->Black,
 	PlotLabels->"Pade-Conformal-Borel"];
 Export["plots/singPlot.png", Show[dottedLine, singPlotPBT, singPlotBT, singPlotPCBT, PlotRange->All]];
+
+(* z plane poles (conformal) mapped back to Borel plane p *)
+polesCPCBT = (2 # / (1 - #^2)&) @ polesC;
+polesPlotCPCBT = ListPlot[Map[{Re[#], Im[#]}&, polesCPCBT], PlotStyle->Red,
+	AxesLabel->{"Re[z]", "Im[z]"},
+	PlotLabel->"Fig 8:\n Poles of CPCBT"];
+Export["plots/CPCBTPoles.png", polesPlotCPCBT];
 
 (* Laplace transform of Pade-Conformal-Borel *)
 hListC = ParallelMap[InverseBorelTransform[CPCBT, p, #]&, xList];
