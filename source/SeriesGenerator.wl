@@ -21,9 +21,9 @@ FindLowestPower::usage = "FindLowestPower[series, t] finds the lowest power of t
 RichardsonExtrapolate::usage = "RichardsonExtrapolate[series, orderN]: Extrapolate to the limit n->infty of the series a_n using Richardson's extrapolation on the last orderN elements.";
 BorelTransformCoeffs::usage = "BorelTransformCoeffs[seriesCoeffs]: Transforms the coefficients a_n to a_n / (2n-1)!";
 BorelTransform::usage = "BorelTransform[an, p]: Transforms the series a_n x^n to the Borel transformed a_n / (2n-1)! p^(2n-1)";
-InverseBorelTransform::usage = "asdf";
-ConformalMap::usage = "asdf";
-InverseConformalMap::usage = "asdf";
+InverseBorelTransform::usage = "InverseBorelTransform[borelTransform, var, xVal] numerically perform the Laplace transform to get back to the function. xVal is the point in the original plane where you want the function.";
+ConformalMap::usage = "ConformalMap[func, var, newVar] performs the conformal mapping var -> 2 newVar / ( 1 - newVar^2)";
+InverseConformalMap::usage = "InverseConformalMap[func, var, newVar] performas the inverse conformal mapping var -> newVar / (1 + Sqrt[1 + newVar^2])";
 FactorCompletely::usage = "FactorCompletely[polynoimal, var] does what built in Factor[...] cannot ..., found on https://mathematica.stackexchange.com/questions/8255/factoring-polynomials-to-factors-involving-complex-coefficients]";
 
 Begin["`Private`"];
