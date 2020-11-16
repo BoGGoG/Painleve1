@@ -9,10 +9,9 @@ Atable = Table[ coeffs[[i]] / (-1)^(i+1) / Gamma[2 i - 1/2], {i,1,Length@coeffs}
 anprefactor = RichardsonExtrapolate[Atable, 5]
 Print["The analytic result is ", 1/Pi Sqrt[ 6 / (5 Pi) ] // N]
 
-BorelTransformCoeffs[coeffs]
-
 BT = BorelTransform[coeffs, p];
 PBT = PadeApproximant[BT, {p, 0, {orderN-1, orderN}}];
+PBT = Apart[(Numerator@PBT // N) / FactorCompletely[Denominator@PBT // N, p], p];
 
 poles = p/.NSolve[Denominator@PBT == 0, p];
 zeroes = p/.NSolve[Numerator@PBT == 0, p];
@@ -25,18 +24,19 @@ plot = Show[GraphicsRow[{rePlot, imPlot}],
 	PlotLabel->"Pade-Borel Transform of P1 along real and imaginary axes"];
 Export["plots/Pade-Borel-ReIm.png", plot];
 
-poles = p/.NSolve[Denominator@PBT == 0, p];
+poles = p/.NSolve[Denominator@Together@PBT == 0, p];
 zeroes = p/.NSolve[Numerator@PBT == 0, p];
 
 polesPlot = ListPlot[Map[{Re[#], Im[#]}&, poles], PlotStyle->Red];
-zeroesPlot = ListPlot[Map[{Re[#], Im[#]}&, zeroes], PlotStyle->Blue]
-plot = Show[zeroesPlot, polesPlot, PlotLabel->"Fig. 1: Poles (red) and zeroes (blue) of the Pade-Borel transform"];
+zeroesPlot = ListPlot[Map[{Re[#], Im[#]}&, zeroes], PlotStyle->Blue, PlotMarkers->{Automatic, 0.02}]
+plot = Show[zeroesPlot, polesPlot, PlotLabel->"Fig. 1:\n Poles (red) and zeroes (blue) of the Pade-Borel transform"];
 Export["plots/PadePolesAndZeroes.png", plot];
 
 (* Laplace Transform *)
 xList = Range[0,3.5,0.001];
-hList = Map[InverseBorelTransform[PBT, p, #]&, xList];
+hList = ParallelMap[InverseBorelTransform[PBT, p, #]&, xList];
 yList = - Sqrt[xList / 6] ( 1 + hList ); (* eq. (4) *)
+
 
 (* plot = ListPlot[Thread@{xList, hList}];*)
 yPlot = ListPlot[Thread@{xList, yList},
@@ -53,6 +53,7 @@ Export["plots/yPlot.png", Show[yPlot, tritronqueePlot]];
 CBT = ConformalMap[BT, p, z];
 TCBT = Normal@Series[CBT, {z, 0,2 orderN - 1}]; (* taylor conformal borel *)
 PCBT = PadeApproximant[TCBT, {z, 0, {orderN-1, orderN}}];
+PCBT = Apart[(Numerator@PCBT // N) / FactorCompletely[Denominator@PCBT // N, z], z];
 CPCBT = InverseConformalMap[PCBT, z, p];
 
 Print["We get for half the Stokes constant at p=i: ", Re[(Sqrt[p - I] CPCBT) /. p -> 0.99999 I // N]];
@@ -69,7 +70,7 @@ singPlotPCBT = Plot[Re[(Sqrt[p - I] CPCBT) /. p -> I pp], {pp, 0.9, 1.0}, PlotSt
 Export["plots/singPlot.png", Show[dottedLine, singPlotPBT, singPlotBT, singPlotPCBT, PlotRange->All]];
 
 (* Laplace transform of Pade-Conformal-Borel *)
-hListC = Map[InverseBorelTransform[CPCBT, p, #]&, xList];
+hListC = ParallelMap[InverseBorelTransform[CPCBT, p, #]&, xList];
 yListC = - Sqrt[xList / 6] ( 1 + hListC ); (* eq. (4) *)
 
 
@@ -79,4 +80,6 @@ yPlotC = ListPlot[Thread@{xList, yListC},
 	PlotStyle->Red,
 	PlotLabels->"Pade-Comformal-Borel"];
 
-Export["plots/yPlot2.png", Show[yPlot, tritronqueePlot, yPlotC, PlotRange->{{0,0.3}, {-0.4,0}}]];
+Export["plots/yPlot2.png", Show[yPlot, tritronqueePlot, yPlotC, PlotRange->{{0,3.0}, {-0.9,0}}]];
+
+Export["plots/plot.png", Show[yPlot, yPlotC, tritronqueePlot, PlotRange->{{0,0.1},{-0.22, -0.17}}]];

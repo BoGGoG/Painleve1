@@ -24,6 +24,7 @@ BorelTransform::usage = "BorelTransform[an, p]: Transforms the series a_n x^n to
 InverseBorelTransform::usage = "asdf";
 ConformalMap::usage = "asdf";
 InverseConformalMap::usage = "asdf";
+FactorCompletely::usage = "FactorCompletely[polynoimal, var] does what built in Factor[...] cannot ..., found on https://mathematica.stackexchange.com/questions/8255/factoring-polynomials-to-factors-involving-complex-coefficients]";
 
 Begin["`Private`"];
 
@@ -38,7 +39,7 @@ Painleve1PertSol[order_] := Block[
 
 	leadingOrder = -2;
 	Do[
-		DEQPert = DEQ /. {h->hSeries[n+1]} /. aArr;
+		DEQPert = DEQ /. {h->hSeries[n+2]} /. aArr;
 		LeadingOrderCoeff = Coefficient[DEQPert, t, leadingOrder-2n+2];
 		aSol = Solve[LeadingOrderCoeff == 0, a[n]][[1,1]];
 		AppendTo[aArr, aSol];
@@ -59,17 +60,16 @@ LeadingOrder[series_, t_] := Block[{},
 ];
 
 BorelTransformCoeffs[seriesCoeffs_] := Block[{},
-(* Map[seriesCoeffs[[#]] / ((2 # - 1)!)&, Range[1,Length@seriesCoeffs]] *)
 	Table[seriesCoeffs[[n]] / ((2 n - 1)!), {n,1,Length@seriesCoeffs}]
 ];
 
-BorelTransform[seriesCoeffs_, p_] := Block[{borelCoeffs, i},
+BorelTransform[seriesCoeffs_, p_] := Block[{borelCoeffs, n},
 	borelCoeffs = BorelTransformCoeffs[seriesCoeffs];
-	Sum[borelCoeffs[[i]] p^(2 i - 1), {i,1,Length@seriesCoeffs}]
+	Sum[borelCoeffs[[n]] p^(2 n - 1), {n,1,Length@seriesCoeffs}]
 ];
 
 InverseBorelTransform[borelTransform_, var_, newVar_] := Block[{},
-	NIntegrate[Exp[-var newVar] borelTransform, {var, 0, 1000}]
+	NIntegrate[Exp[-var newVar] borelTransform, {var, 0, Infinity}]
 ];
 
 ConformalMap[borelTransform_, var_, newVar_] := Block[{},
@@ -80,6 +80,12 @@ InverseConformalMap[padeConformalBorelTranform_, var_, newVar_] := Block[{},
 	padeConformalBorelTranform /. var -> newVar / (1 + Sqrt[1 + newVar^2])
 ];
 
+FactorCompletely[poly_, x_] := Module[
+  {solns, lcoeff},
+  solns = Solve[poly == 0, x, Cubics -> False, Quartics -> False];
+  lcoeff = Coefficient[poly, x^Exponent[poly, x]];
+  lcoeff*(Times @@ (x - (x /. solns)))
+  ]
 
 (* END OF FUNCTIONS *)
 
