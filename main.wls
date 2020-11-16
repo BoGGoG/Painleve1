@@ -15,6 +15,8 @@ BT = BorelTransform[coeffs, p];
 PBT = PadeApproximant[BT, {p, 0, {orderN-1, orderN}}];
 PBT = Apart[(Numerator@PBT // N) / FactorCompletely[Denominator@PBT // N, p], p];
 
+Length@BorelTransformCoeffs[coeffs]
+
 poles = p/.NSolve[Denominator@PBT == 0, p];
 zeroes = p/.NSolve[Numerator@PBT == 0, p];
 
@@ -36,7 +38,7 @@ Export["plots/PadePolesAndZeroes.png", plot];
 
 (* Laplace Transform *)
 xList = Range[0,3.5,0.001];
-hList = ParallelMap[InverseBorelTransform[PBT, p, #]&, xList];
+hList = ParallelMap[InverseBorelTransform[PBT, p, (24 #)^(5/4) / 30]&, xList];
 yList = - Sqrt[xList / 6] ( 1 + hList ); (* eq. (4) *)
 
 
@@ -57,6 +59,7 @@ TCBT = Normal@Series[CBT, {z, 0,2 orderN - 1}]; (* taylor conformal borel *)
 PCBT = PadeApproximant[TCBT, {z, 0, {orderN-1, orderN}}];
 PCBT = Apart[(Numerator@PCBT // N) / FactorCompletely[Denominator@PCBT // N, z], z];
 CPCBT = InverseConformalMap[PCBT, z, p];
+
 
 (* stokes constants, figure 8 *)
 polesC = z/.NSolve[Denominator@Together@PCBT == 0, z];
@@ -82,11 +85,12 @@ Export["plots/singPlot.png", Show[dottedLine, singPlotPBT, singPlotBT, singPlotP
 polesCPCBT = (2 # / (1 - #^2)&) @ polesC;
 polesPlotCPCBT = ListPlot[Map[{Re[#], Im[#]}&, polesCPCBT], PlotStyle->Red,
 	AxesLabel->{"Re[z]", "Im[z]"},
-	PlotLabel->"Fig 8:\n Poles of CPCBT"];
+	PlotLabel->"Fig 8:\n Poles of CPCBT",
+	PlotRange->{{-7,7}, {-4,4}}];
 Export["plots/CPCBTPoles.png", polesPlotCPCBT];
 
 (* Laplace transform of Pade-Conformal-Borel *)
-hListC = ParallelMap[InverseBorelTransform[CPCBT, p, #]&, xList];
+hListC = ParallelMap[InverseBorelTransform[CPCBT, p, (24 #)^(5/4) / 30]&, xList];
 yListC = - Sqrt[xList / 6] ( 1 + hListC ); (* eq. (4) *)
 
 
@@ -96,6 +100,6 @@ yPlotC = ListPlot[Thread@{xList, yListC},
 	PlotStyle->Red,
 	PlotLabels->"Pade-Comformal-Borel"];
 
-Export["plots/yPlot2.png", Show[yPlot, tritronqueePlot, yPlotC, PlotRange->{{0,3.0}, {-0.9,0}}]];
+Export["plots/yPlot2.png", Show[yPlot, tritronqueePlot, yPlotC, PlotRange->{{0,0.3}, {-0.17,-0.27}}]];
 
 Export["plots/plot.png", Show[yPlot, yPlotC, tritronqueePlot, PlotRange->{{0,0.1},{-0.22, -0.17}}]];
