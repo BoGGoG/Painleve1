@@ -69,7 +69,7 @@ BorelTransform[seriesCoeffs_, p_] := Block[{borelCoeffs, n},
 ];
 
 InverseBorelTransform[borelTransform_, var_, newVar_] := Block[{},
-	NIntegrate[Exp[-var newVar] borelTransform, {var, 0, Infinity}]
+	NIntegrate[Exp[-var newVar] borelTransform, {var, 0, 100}]
 ];
 
 ConformalMap[borelTransform_, var_, newVar_] := Block[{},
