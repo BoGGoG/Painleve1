@@ -1,0 +1,134 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      4032,        124]
+NotebookOptionsPosition[      3193,        103]
+NotebookOutlinePosition[      3591,        119]
+CellTagsIndexPosition[      3548,        116]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"sourceFolder", " ", "=", " ", "\"\<source\>\""}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"sourcePath", " ", "=", " ", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"NotebookDirectory", "[", "]"}], ",", " ", "sourceFolder"}], 
+     "}"}], "]"}]}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"$Path", "=", 
+   RowBox[{"Once", "[", 
+    RowBox[{"Append", "[", 
+     RowBox[{"$Path", ",", "sourcePath"}], "]"}], "]"}]}], ";"}], "\n", 
+ RowBox[{"<<", "\"\<SeriesGenerator.wl\>\""}]}], "Code",
+ CellChangeTimes->{{3.814864547106715*^9, 3.8148645480190973`*^9}, {
+  3.814864604243491*^9, 3.814864620141712*^9}},
+ CellLabel->"In[3]:=",ExpressionUUID->"492f8a65-34b7-455e-b8be-b758c92ea6a5"],
+
+Cell[CellGroupData[{
+
+Cell["Painleve 1", "Title",
+ CellChangeTimes->{{3.8148646395094833`*^9, 
+  3.814864649548048*^9}},ExpressionUUID->"156be7b0-d477-4a2b-a311-\
+b5e2406bea0c"],
+
+Cell["The Painleve 1 equation has the form", "Text",
+ CellChangeTimes->{{3.8148647436933403`*^9, 
+  3.814864792050622*^9}},ExpressionUUID->"3967b9f3-786c-49f2-b755-\
+7f0cf74d87ba"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"y", "''"}], "[", "x", "]"}], " ", "==", " ", 
+   RowBox[{
+    RowBox[{"6", " ", 
+     RowBox[{
+      RowBox[{"y", "[", "x", "]"}], "^", "2"}]}], " ", "-", " ", "x"}]}], 
+  ";"}]], "Code",
+ CellChangeTimes->{{3.8148647953441563`*^9, 3.814864846056218*^9}},
+ CellLabel->"In[17]:=",ExpressionUUID->"12fece46-223a-4eea-81de-cc8d9bc5bfd7"],
+
+Cell[TextData[{
+ "We transform it by defining t = ",
+ Cell[BoxData[
+  FormBox[
+   FractionBox[
+    SuperscriptBox[
+     RowBox[{"(", 
+      RowBox[{"24", " ", "x"}], ")"}], 
+     RowBox[{"5", "/", "4"}]], "30"], TraditionalForm]],
+  FormatType->"TraditionalForm",ExpressionUUID->
+  "698c3c8b-3bbb-4b1d-b9c5-68128de8a559"],
+ ", y[x] = - ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    SqrtBox[
+     FractionBox["x", "6"]], 
+    RowBox[{"(", " ", 
+     RowBox[{"1", " ", "+", " ", 
+      RowBox[{"h", "[", "t", "]"}]}]}]}], TraditionalForm]],
+  FormatType->"TraditionalForm",ExpressionUUID->
+  "a7734b3e-d545-4b6b-b958-34f101e02e23"],
+ ")"
+}], "Text",
+ CellChangeTimes->{{3.814864852588365*^9, 
+  3.814864930587262*^9}},ExpressionUUID->"0a513e38-9f1e-40ed-91f9-\
+627f36863026"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"orderN", " ", "=", " ", "10"}], ";"}], "\n", 
+ RowBox[{
+  RowBox[{"coeffs", " ", "=", " ", 
+   RowBox[{"Painleve1PertSol", "[", "orderN", "]"}]}], ";"}]}], "Code",
+ CellChangeTimes->{{3.814864630052815*^9, 3.814864632739903*^9}},
+ CellLabel->"In[9]:=",ExpressionUUID->"bff759a5-fd7c-4e8b-bba4-19eab1b4feb3"]
+}, Open  ]]
+},
+WindowSize->{817.5, 1049.25},
+WindowMargins->{{Automatic, 22.5}, {7.5, Automatic}},
+FrontEndVersion->"12.1 for Linux x86 (64-bit) (June 19, 2020)",
+StyleDefinitions->"Script.nb",
+ExpressionUUID->"53e32809-5ccd-4558-9a1c-148a3be57ff3"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 738, 18, 99, "Code",ExpressionUUID->"492f8a65-34b7-455e-b8be-b758c92ea6a5"],
+Cell[CellGroupData[{
+Cell[1321, 42, 155, 3, 98, "Title",ExpressionUUID->"156be7b0-d477-4a2b-a311-b5e2406bea0c"],
+Cell[1479, 47, 180, 3, 35, "Text",ExpressionUUID->"3967b9f3-786c-49f2-b755-7f0cf74d87ba"],
+Cell[1662, 52, 394, 11, 36, "Code",ExpressionUUID->"12fece46-223a-4eea-81de-cc8d9bc5bfd7"],
+Cell[2059, 65, 772, 26, 46, "Text",ExpressionUUID->"0a513e38-9f1e-40ed-91f9-627f36863026"],
+Cell[2834, 93, 343, 7, 58, "Code",ExpressionUUID->"bff759a5-fd7c-4e8b-bba4-19eab1b4feb3"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+
