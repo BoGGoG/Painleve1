@@ -1,4 +1,5 @@
 <<"source/SeriesGenerator.wl"
+
 (* Checking accuracy at x0 = 3 *)
 
 orderN = 10;
@@ -25,6 +26,7 @@ P1DEQ[x_, h_, dh_, ddh_] = ddy[x, h, dh, ddh] - 6 (yy[x, h]/.h[t_]->h)^2 + x;
 
 P1DEQ[xList, hList, dhList, ddhList] (* checking how well my solutions fulfill the DEQ *)
 
+yy[x,h]/.{h[t_]->h} /. {x->xList, h->hListC}
 
 
 (* Pade-Conformal-Borel *)
@@ -41,3 +43,30 @@ ddhListC = Map[InverseBorelTransform[(- p)^2 CPCBT, p, (24 #)^(5/4) / 30]&, xLis
 (* yListC = - Sqrt[xList / 6] ( 1 + hListC ); (* eq. (4) *) *)
 
 P1DEQ[xList, hListC, dhListC, ddhListC] (* checking how well my solutions fulfill the DEQ *)
+
+
+
+(* Directly going to the origin *)
+
+xList2 = Range[0.001, 0.3, 0.001];
+hListC2 = InverseBorelTransform[CPCBT, p, (24 xList2)^(5/4) / 30];
+dhListC2 = InverseBorelTransform[(- p) CPCBT, p, (24 xList2)^(5/4) / 30];
+ddhListC2 = InverseBorelTransform[(- p)^2 CPCBT, p, (24 xList2)^(5/4) / 30];
+
+
+yPlot2 = ListPlot[Thread@{xList2, yy[x,h]/.{h[t_]->h} /. {x->xList2, h->hListC2}}];
+Export["yPlot2.pdf", yPlot2]
+
+Abs@P1DEQ[xList2, hListC2, dhListC2, ddhListC2]
+
+
+errorPlot2 = ListPlot[Thread@{xList2, Abs@P1DEQ[xList2, hListC2, dhListC2, ddhListC2]},
+	PlotRange->{0,0.3}]
+Export["errorPlot2.pdf", errorPlot2]
+
+(* Directly going to the origin is not really working.
+	Look at the yPlot2, which is basically Figure 6 in Dunnes
+	paper. It cannot work.
+	I guess what they did is do a linear regression from x=0.2 or
+	so down to x=0.
+	*)
