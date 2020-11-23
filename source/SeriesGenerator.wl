@@ -25,6 +25,7 @@ InverseBorelTransform::usage = "InverseBorelTransform[borelTransform, var, xVal]
 ConformalMap::usage = "ConformalMap[func, var, newVar] performs the conformal mapping var -> 2 newVar / ( 1 - newVar^2)";
 InverseConformalMap::usage = "InverseConformalMap[func, var, newVar] performas the inverse conformal mapping var -> newVar / (1 + Sqrt[1 + newVar^2])";
 FactorCompletely::usage = "FactorCompletely[polynoimal, var] does what built in Factor[...] cannot ..., found on https://mathematica.stackexchange.com/questions/8255/factoring-polynomials-to-factors-involving-complex-coefficients]";
+InverseBorelTransformAnalytic::usage = "asdf";
 
 Begin["`Private`"];
 
@@ -69,7 +70,11 @@ BorelTransform[seriesCoeffs_, p_] := Block[{borelCoeffs, n},
 ];
 
 InverseBorelTransform[borelTransform_, var_, newVar_] := Block[{},
-	NIntegrate[Exp[-var newVar] borelTransform, {var, 0, 100}]
+	NIntegrate[Exp[-var newVar] borelTransform, {var, 0, Infinity}]
+];
+
+InverseBorelTransformAnalytic[borelTransform_, var_, newVar_] := Block[{},
+	Integrate[Exp[-var newVar] borelTransform, {var, 0, Infinity}]
 ];
 
 ConformalMap[borelTransform_, var_, newVar_] := Block[{},
