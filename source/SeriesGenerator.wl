@@ -26,6 +26,9 @@ ConformalMap::usage = "ConformalMap[func, var, newVar] performs the conformal ma
 InverseConformalMap::usage = "InverseConformalMap[func, var, newVar] performas the inverse conformal mapping var -> newVar / (1 + Sqrt[1 + newVar^2])";
 FactorCompletely::usage = "FactorCompletely[polynoimal, var] does what built in Factor[...] cannot ..., found on https://mathematica.stackexchange.com/questions/8255/factoring-polynomials-to-factors-involving-complex-coefficients]";
 InverseBorelTransformAnalytic::usage = "asdf";
+ReexpandP1Coeff::usage = "asdf";
+ReexpandP1::usage = "asdf";
+ReexpandP1Analytic::usage = "asdf";
 
 Begin["`Private`"];
 
@@ -70,7 +73,8 @@ BorelTransform[seriesCoeffs_, p_] := Block[{borelCoeffs, n},
 ];
 
 InverseBorelTransform[borelTransform_, var_, newVar_] := Block[{},
-	NIntegrate[Exp[-var newVar] borelTransform, {var, 0, Infinity}]
+	NIntegrate[Exp[-var newVar] borelTransform, {var, 0, Infinity},
+	PrecisionGoal -> 100, WorkingPrecision -> 200]
 ];
 
 InverseBorelTransformAnalytic[borelTransform_, var_, newVar_] := Block[{},
@@ -90,7 +94,43 @@ FactorCompletely[poly_, x_] := Module[
   solns = Solve[poly == 0, x, Cubics -> False, Quartics -> False];
   lcoeff = Coefficient[poly, x^Exponent[poly, x]];
   lcoeff*(Times @@ (x - (x /. solns)))
-  ]
+  ];
+
+(* REEXPANSION *)
+PIDEQ = y''[x] == 6 y[x]^2 - x
+yn[x_, n_/;n>1] := D[PIDEQ, {x,n-2}][[2]]; (* nth deriv of y *)
+
+ReexpandP1Coeff[giveny_, x0_, order_] := Block[{rule},
+	rule = Table[D[y[x], {x, n-1}] -> giveny[[n]], {n,1,Length@giveny}];
+	yn[x, order] /. rule /. x->x0
+];
+
+ReexpandP1[{y0_, dy0_}, {x_, x0_}, order_/;order>1] := Block[{sols, sol},
+	sols = {y0, dy0};
+	Do[
+		sol = ReexpandP1Coeff[sols, x0, i];
+		AppendTo[sols, sol];
+	, {i, 2, order}];
+	Sum[(x-x0)^(i-1) sols[[i]] / ((i-1)!), {i,1,order+1}]
+];
+
+ReexpandP1CoeffAnalytic[giveny_, xx_, order_] := Block[{rule},
+	rule = Table[D[y[x], {x, n-1}] -> giveny[[n]], {n,1,Length@giveny}];
+	yn[x, order] /. rule /. x->xx
+];
+
+(* first get equations and then plug in numbers. In my test it was not better than
+	plugging in numbers from the start. *)
+ReexpandP1Analytic[{y_, yVal_}, {dy_, dyVal_}, {x_, x0_}, order_] := Block[{sol, sols},
+	sols = {y, dy};
+	Do[
+		sol = ReexpandP1CoeffAnalytic[sols, x, i];
+		AppendTo[sols, sol];
+		, {i, 2, order}];
+	sols = sols /. {y->yVal, dy->dyVal, x->x0};
+	Sum[(x-x0)^(i-1) sols[[i]] / ((i-1)!), {i,1,order+1}]
+];
+
 
 (* END OF FUNCTIONS *)
 
