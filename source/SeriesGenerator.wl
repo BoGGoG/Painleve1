@@ -25,10 +25,10 @@ InverseBorelTransform::usage = "InverseBorelTransform[borelTransform, var, xVal]
 ConformalMap::usage = "ConformalMap[func, var, newVar] performs the conformal mapping var -> 2 newVar / ( 1 - newVar^2)";
 InverseConformalMap::usage = "InverseConformalMap[func, var, newVar] performas the inverse conformal mapping var -> newVar / (1 + Sqrt[1 + newVar^2])";
 FactorCompletely::usage = "FactorCompletely[polynoimal, var] does what built in Factor[...] cannot ..., found on https://mathematica.stackexchange.com/questions/8255/factoring-polynomials-to-factors-involving-complex-coefficients]";
-InverseBorelTransformAnalytic::usage = "asdf";
-ReexpandP1Coeff::usage = "asdf";
-ReexpandP1::usage = "asdf";
-ReexpandP1Analytic::usage = "asdf";
+InverseBorelTransformAnalytic::usage = "InverseBorelTransformAnalytic[borelTransform, var, newVar] transform the Laplace transform from var=0 to infty analytically.";
+ReexpandP1Coeff::usage = "ReexpandP1Coeff[giveny, x0, order] given the values `giveny` (which should be y[x0] and y'[x0], ... until order-1), return the orderth coefficient in the expansion around x0 of the P1 equation.";
+ReexpandP1::usage = "ReexpandP1[{y0, dy0}, {x, x0}, order]: given the values `giveny` (which should be y[x0] and y'[x0], return the expansion of the P1 equation around x0 to order order with y[x0]=y0, y'[x0]=dy0".
+ReexpandP1Analytic::usage = "ReexpandP1Analytic[{y, yVal}, {dy, dyVal}, {x, x0}, order]: Simmilar to ReexpandP1, but first express all coefficients in terms of y, y' and then plug in the values. I thought this might give better precision, but it's just wayyyy slower."
 
 Begin["`Private`"];
 
