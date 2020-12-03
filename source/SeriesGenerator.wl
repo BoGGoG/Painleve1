@@ -72,9 +72,11 @@ BorelTransform[seriesCoeffs_, p_] := Block[{borelCoeffs, n},
 	Sum[borelCoeffs[[n]] p^(2 n - 1), {n,1,Length@seriesCoeffs}]
 ];
 
-InverseBorelTransform[borelTransform_, var_, newVar_] := Block[{},
+Options[InverseBorelTransform] = {PrecisionGoal->30, WorkingPrecision -> 50};
+InverseBorelTransform[borelTransform_, var_, newVar_, OptionsPattern[]] := Block[{},
+(*NIntegrate[Exp[-var newVar] borelTransform, {var, 0, Infinity},*)
 	NIntegrate[Exp[-var newVar] borelTransform, {var, 0, Infinity},
-	PrecisionGoal -> 30, WorkingPrecision -> 50]
+	PrecisionGoal -> OptionValue[PrecisionGoal], WorkingPrecision -> OptionValue[WorkingPrecision]]
 ];
 
 InverseBorelTransformAnalytic[borelTransform_, var_, newVar_] := Block[{},
