@@ -1,3 +1,6 @@
+#!/usr/bin/env wolframscript
+(* ::Package:: *)
+
 <<"source/SeriesGenerator.wl"
 
 orderN = 10;
@@ -100,6 +103,5 @@ yPlotC = ListPlot[Thread@{xList, yListC},
 	PlotStyle->Red,
 	PlotLabels->"Pade-Comformal-Borel"];
 
-Export["plots/yPlot2.png", Show[yPlot, tritronqueePlot, yPlotC, PlotRange->{{0,0.3}, {-0.17,-0.27}}]];
-
+Export["plots/yPlot2.png", Show[yPlot, tritronqueePlot, yPlotC, PlotRange->{{0,0.3}, {-0.17,-0.27}}, Frame->True]];
 Export["plots/plot.png", Show[yPlot, yPlotC, tritronqueePlot, PlotRange->{{0,0.1},{-0.22, -0.17}}]];

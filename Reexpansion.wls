@@ -1,6 +1,9 @@
 #!/usr/bin/env wolframscript
 (* ::Package:: *)
 
+Plot[Gamma[2n - 1/2] / Gamma[2n], {n,1,30}]
+
+
 (* ::Title:: *)
 (*Reexpansion*)
 
